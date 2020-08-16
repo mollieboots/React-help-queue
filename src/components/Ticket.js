@@ -4,13 +4,16 @@ import PropTypes from "prop-types";
 function Ticket(props) {
   return (
     <React.Fragment>
-      <h3>
-        {props.location} - {props.names}
-      </h3>
-      <p>
-        <em>{props.issue}</em>
-      </p>
+      <div id={props.id}>
+        <h3>
+          {props.location} - {props.names}
+        </h3>
+        <p>
+          <em>{props.issue}</em>
+        </p>
+      </div>
     </React.Fragment>
+    //add a button and add handler and give it props.id
   );
 }
 
