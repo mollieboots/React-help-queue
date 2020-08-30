@@ -1,15 +1,22 @@
 import React from "react";
 import Header from "./Header";
 import TicketControl from "./TicketControl";
-import MyStyledComponent from "./MyStyledComponent";
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import SignIn from './SignIn';
 
 function App() {
   return (
-    <React.Fragment>
+    <Router>
       <Header />
-      <MyStyledComponent />
-      <TicketControl />
-    </React.Fragment>
+      <Switch>
+        <Route path="/signin">
+          <SignIn />
+        </Route>
+        <Route path="/">
+          <TicketControl />
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 
