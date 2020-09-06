@@ -5,6 +5,8 @@ import TicketDetail from "./TicketDetail";
 import EditTicketForm from "./EditTicketForm";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import * as a from './../actions';
+import Moment from 'moment';
 
 class TicketControl extends React.Component {
   constructor(props) {
@@ -16,17 +18,40 @@ class TicketControl extends React.Component {
     };
   }
 
+  componentDidMount(){
+    this.waitTimeUpdateTimer = setInterval(() =>
+      this.updateTicketElapsedTime(),
+      1000
+    );
+  }
+
+  componentDidUpdate() {
+    console.log("component updated!");
+  }  
+
+  componentWillUnmount(){
+      console.log("component unmounted!");
+      clearInterval(this.waitTimeUpdateTimer);
+  }
+
+  updateTicketElapsedTime = () => {
+      console.log("tick");
+  }
+
   handleClick = () => {
     if (this.state.selectedTicket != null) {
       this.setState({
-        formVisibleOnPage: false,
+        // formVisibleOnPage: false,
         selectedTicket: null,
         editing: false,
       });
     } else {
-      this.setState(prevState => ({
-        formVisibleOnPage: !prevState.formVisibleOnPage,
-      }));
+      const { dispatch } = this.props;
+      const action = a.toggleForm();
+      dispatch(action);
+      // this.setState(prevState => ({
+      //   formVisibleOnPage: !prevState.formVisibleOnPage,
+      // }));
     }
   };
 
@@ -38,13 +63,7 @@ class TicketControl extends React.Component {
   handleAddingNewTicketToList = (newTicket) => {
     const { dispatch } = this.props;
     const { id, names, location, issue } = newTicket;
-    const action = {
-      type: 'ADD_TICKET',
-      id: id,
-      names: names,
-      location: location,
-      issue: issue,
-    }
+    const action = a.addTicket(newTicket);
     dispatch(action);
     this.setState({formVisibleOnPage: false})
     // below code is from pure react, without redux
@@ -62,24 +81,14 @@ class TicketControl extends React.Component {
 
   handleDeletingTicket = (id) => {
     const { dispatch } = this.props;
-    const action = {
-      type: 'DELETE_TICKET',
-      id: id
-    }
+    const action = a.deleteTicket(id);
     dispatch(action);
     this.setState({selectedTicket: null});
   }
 
   handleEditingTicketInList = (ticketToEdit) => {
     const { dispatch } = this.props;
-    const { id, names, location, issue } = ticketToEdit;
-    const action = {
-      type: 'ADD_TICKET',
-      id: id,
-      names: names,
-      location: location,
-      issue: issue,
-    }
+    const action = a.addTicket(ticketToEdit);
     dispatch(action);
     this.setState({
       editing: false,
